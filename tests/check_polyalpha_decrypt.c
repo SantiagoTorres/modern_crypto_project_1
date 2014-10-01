@@ -8,8 +8,7 @@
 
 
 #include<check.h>
-
-
+#include<stdlib.h>
 
 
 
@@ -33,7 +32,7 @@ Suite * polyalpha_decrypt_suite(void)
 
 
     /* add the case */
-    tcase_add_test (tc_non_partial, test_empty);
+    tcase_add_test (tc_core, test_empty);
     suite_add_tcase (s, tc_core);
 
     return s;
