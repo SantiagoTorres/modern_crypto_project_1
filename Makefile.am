@@ -1,3 +1,4 @@
+#comment
 AM_CFLAGS = -I$(srcdir)/include
 
 SUBDIRS = src . tests 
