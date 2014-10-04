@@ -7,16 +7,15 @@
  */
 
 
-#include<check.h>
-#include<stdlib.h>
+#include <check.h>
+#include <stdlib.h>
+#include "polyalpha_decrypt.h"
 
 
 
 // this is an empty check stub
 START_TEST(test_empty) {
-    
     ck_assert(1);
-
 }END_TEST
 
 
