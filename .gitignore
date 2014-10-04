@@ -18,12 +18,10 @@
 *.exe
 *.out
 *.app
-polypasswordhasher
-check_libgfshare
-check_libpolypasswordhasher
-check_libpph_thresholdless
-check_libpph_partialbytes
-check_libpph_phc
+check_polyalpha_decrypt
+polyalpha_decrypt 
+polyalpha_decrypt
+check_input_control
 
 # autoconf specific
 Makefile
@@ -57,3 +55,4 @@ stamp-h1
 
 # libtool
 libtool
+*.trs
