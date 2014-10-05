@@ -9,7 +9,7 @@ AM_CFLAGS = -I$(top_builddir)/include
 	
 
 bin_PROGRAMS = polyalpha_decrypt
-polyalpha_decrypt_SOURCES = polyalpha_decrypt.c input_control.c
+polyalpha_decrypt_SOURCES = polyalpha_decrypt.c input_control.c break_utils.c
 polyalpha_decrypt_CFLAGS = -I$(top_builddir)/include/
 
 #polyalpha_decrypt_LDADD = $(top_builddir)/src/libpolypasswordhasher.la
