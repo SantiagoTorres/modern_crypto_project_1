@@ -27,7 +27,6 @@
 
 char * break_polyalpha_assuming(int keylength, char *ciphertext) {
 
-    puts("lel"); 
     return NULL;
 
 }

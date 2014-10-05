@@ -28,8 +28,13 @@
 #define POLYALPHA_DECRYPT_H 
 
 
-#include<stdio.h>
-#include<strings.h>
+#include <stdio.h>
+#include <strings.h>
+#include <time.h>
+
+
+/* DEFINES */
+#define ALGORITHM_NUMBER 1
 
 #endif /* POLYALPHA_DECRYPT_H */
 
