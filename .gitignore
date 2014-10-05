@@ -22,6 +22,7 @@ check_polyalpha_decrypt
 polyalpha_decrypt 
 polyalpha_decrypt
 check_input_control
+check_break_utils
 
 # autoconf specific
 Makefile
