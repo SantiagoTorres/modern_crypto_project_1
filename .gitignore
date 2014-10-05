@@ -56,3 +56,4 @@ stamp-h1
 # libtool
 libtool
 *.trs
+*.log
