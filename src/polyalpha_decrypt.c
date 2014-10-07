@@ -1,8 +1,7 @@
 #include "polyalpha_decrypt.h"
-#include "dictionary2.h"
-#include "dictionary1.h"
 #include "input_control.h"
 #include "break_utils.h"
+
 int main(void)
 {
 

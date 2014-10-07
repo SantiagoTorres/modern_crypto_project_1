@@ -28,10 +28,68 @@
 #define BREAK_UTILS_H
 
 #include <stdio.h>
-#include <strings.h>
+#include <string.h>
 #include <stdlib.h>
 
 /* this is an empty break function stub */
 char * break_polyalpha_assuming(int keylength, char *ciphertext);
+
+/*
+ * verify_plaintext
+ *
+ * Checks if the input plaintext exists in dictionary1 or if it could be 
+ * derived from the words contained in dictionary 2
+ *
+ *  INPUT:
+ *      char * plaintext: The plaintext for verify.
+ *
+ *  OUTPUT:
+ *      int > 1 the provided plaintext was found
+ *      int = 0 if the provided plaintext isn't valid, or if the
+ *              argument contains NULL.
+ */
+int *verify_plaintext(char *plaintext);
+
+/*
+ * find_plaintext_in_dict1
+ *
+ * Checks if the input plaintext exists in dictionary1.
+ *
+ *  INPUT:
+ *      char * plaintext: The plaintext for verify.
+ *
+ *  OUTPUT:
+ *      int > 1 the provided plaintext was found
+ *      int = 0 if the provided plaintext isn't in dict 1
+ */
+int find_plaintext_in_dict1(char *plaintext);
+
+
+/* find_plaintext_in_dict2
+ *
+ * Checks if the input plaintext exists as a combination of words in dictionary 2
+ * The last word could be truncated as per request of the professor.
+ *
+ *  INPUT:
+ *      char * plaintext: the plaintext to search in.
+ *
+ *  OUTPUT:
+ *      int > 1 the provided plaintext is found
+ *      int = 0 if the provided plaintext isn't derivable from dict 2
+ */
+int find_plaintext_in_dict2(char *plaintext);
+
+/* find_word_in_dictionary_2
+ *
+ * Checksd if the provided word (NULL terminated) exists in dictionary 2.
+ *
+ *  INPUT:
+ *      char * a word to search
+ *
+ *  OUTPUT:
+ *      int > 1 if the provided word exists
+ *      int = 0 if the provided word doesn't or the input was NULL
+ */
+int find_word_in_dict2(char *plaintext);
 
 #endif /* break_utils.h */
