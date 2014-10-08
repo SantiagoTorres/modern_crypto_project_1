@@ -30,8 +30,8 @@
 #include<stdio.h>
 #include<strings.h>
 
-#define D2_LONGEST_WORD 30
-#define D2_SHORTEST_WORD 4
+#define D2_LONGEST_WORD 15
+#define D2_SHORTEST_WORD 6
 #define D2_DICTIONARY_LENGTH 200
 
 const char DICTIONARY2[D2_DICTIONARY_LENGTH][D2_LONGEST_WORD + 1] = {
