@@ -50,7 +50,7 @@ char * break_polyalpha_assuming(int keylength, char *ciphertext)
  *      int = 0 if the provided plaintext isn't valid, or if the
  *              argument contains NULL.
  */
-int *verify_plaintext(char *plaintext)
+int verify_plaintext(char *plaintext)
 {
     int result;
 
