@@ -77,7 +77,7 @@ int find_plaintext_in_dict1(char *plaintext)
 {
 
     size_t plaintext_length;
-    int i,j;
+    int i,j, offset;
     
     if (plaintext == NULL)
         return 0;
@@ -87,7 +87,12 @@ int find_plaintext_in_dict1(char *plaintext)
     if (plaintext_length < 1)
         return 0;
 
-    for (i = 0; i < D1_DICTIONARY_LENGTH; i++) {
+    offset = plaintext[0] - 'a';
+    if (offset == -1)
+        return 0;
+
+
+    for (i = D1_ALPHA_INDEX[offset]; i < D1_ALPHA_INDEX_END[offset]; i++) {
         for (j = 0; j < D1_LONGEST_WORD; j++) {
 
             if (j == plaintext_length)
@@ -164,20 +169,32 @@ int find_word_in_dict2(char *plaintext)
 {
 
     size_t wordlength;
-    int i;
+    int i, offset;
+    int j;
 
     if (plaintext == NULL)
         return 0;
 
     wordlength = strlen(plaintext);
+    
 
     if (wordlength < 1)
         return 0;
-
-    for (i = 0; i < D2_DICTIONARY_LENGTH; i++) {
-        if (strncmp(DICTIONARY2[i], plaintext, wordlength) == 0)
-                return 1; 
+    
+    offset = plaintext[0] - 'a';
+    
+    if (offset == -1)
+        return 0;
+    
+    for (i = D2_ALPHA_INDEX[offset]; i < D2_ALPHA_INDEX[offset+1]; i++) {
+        for (j = 0; j < wordlength; j++) {
+            if (DICTIONARY2[i][j] != plaintext[j])
+                break;
+            else if (j == wordlength - 1)
+                return 1;
+        }
     }
+
     return 0;
 
 }

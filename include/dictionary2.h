@@ -31,8 +31,66 @@
 #include<strings.h>
 
 #define D2_LONGEST_WORD 15
-#define D2_SHORTEST_WORD 6
+#define D2_SHORTEST_WORD 4
 #define D2_DICTIONARY_LENGTH 200
+
+const int D2_ALPHA_INDEX[] = {
+    0, //a
+    16, //b
+    21, //c
+    38, //d
+    47, //e
+    61, //f
+    74, //g
+    77, //h
+    83, //i
+    -1, //j
+    -1, //k
+    91, //l
+    99, //m
+    114, //n
+    120, //o
+    127, //p
+    151, //q
+    152, //r
+    159, //s
+    176, //t
+    185, //u
+    189, //v
+    195, //w
+    -1, //x
+    -1, //y
+    199, //z
+};
+
+const int D2_ALPHA_INDEX_END[] = {
+    16, //a
+    21, //b
+    38, //c
+    47, //d
+    61, //e
+    74, //f
+    77, //g
+    83, //h
+    91, //i
+    -1, //j
+    -1, //k
+    99, //l
+    114, //m
+    120, //n
+    127, //o
+    151, //p
+    152, //q
+    159, //r
+    176, //s
+    185, //t
+    189, //u
+    195, //v
+    199, //w
+    -1, //x
+    -1, //y
+    D2_DICTIONARY_LENGTH, //z
+};
 
 const char DICTIONARY2[D2_DICTIONARY_LENGTH][D2_LONGEST_WORD + 1] = {
     "abdomen",

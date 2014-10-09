@@ -32,6 +32,67 @@
 
 #define D1_LONGEST_WORD 151
 #define D1_DICTIONARY_LENGTH 151
+#define D1_ALPHABETIC_CHARACTERS 26
+
+const int D1_ALPHA_INDEX[] = {
+    0, //a
+    15, //b
+    17, //c
+    22, //d
+    26, //e
+    29, //f
+    33, //g
+    36, //h
+    53, //i
+    -1, //j
+    67, //k
+    70, //l
+    75, //m
+    81, //n
+    87, //o
+    98, //p
+    99, //q
+    101, //r
+    108, //s
+    123, //t
+    135, //u
+    138, //v
+    139, //w
+    -1, //x
+    148, //y
+    -1, //z
+};
+
+const int D1_ALPHA_INDEX_END[] = {
+    15, //a
+    17, //b
+    22, //c
+    26, //d
+    29, //e
+    33, //f
+    36, //g
+    53, //h
+    67, //i
+    -1, //j
+    70, //k
+    75, //l
+    81, //m
+    87, //n
+    98, //o
+    99, //p
+    101, //q
+    108, //r
+    123, //s
+    135, //t
+    138, //u
+    139, //v
+    148, //w
+    -1, //x
+    D1_DICTIONARY_LENGTH, //y
+    -1, //z
+};
+
+
 
 const char DICTIONARY1[D1_DICTIONARY_LENGTH][D1_LONGEST_WORD + 1] = {
     "ablethanusualonastomachfullofspaghettibologneseandtinnedpearshehadalsohadtheforesighttosuggestthattheytakeafewhoursbreakfromwearingthehorcruxwhichwash",
