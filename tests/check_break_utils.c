@@ -93,12 +93,14 @@ START_TEST(test_find_word_in_dict2)
     /* this array contains:
      *      1 correct word
      *      1 correct word subset
+     *      1 correct word (the longest in the dictionary)
      *      1 existing word but non in the dictionary
      *      1 gibberish word
      */
     char test_vectors[4][20] = {
         "evidence",
         "exami",
+        "reconnaissance",
         "flow",
         "roflsaurus",};
 
@@ -106,8 +108,9 @@ START_TEST(test_find_word_in_dict2)
     ck_assert(find_word_in_dict2(NULL) == 0);
     ck_assert(find_word_in_dict2(test_vectors[0]) > 0);
     ck_assert(find_word_in_dict2(test_vectors[1]) > 0);
-    ck_assert(find_word_in_dict2(test_vectors[2]) == 0);
+    ck_assert(find_word_in_dict2(test_vectors[2]) > 0);
     ck_assert(find_word_in_dict2(test_vectors[3]) == 0);
+    ck_assert(find_word_in_dict2(test_vectors[4]) == 0);
  
 }END_TEST
 
