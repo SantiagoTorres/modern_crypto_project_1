@@ -84,6 +84,7 @@ START_TEST(test_find_plaintext_in_dict2)
 
 }END_TEST
 
+
 /* test_find_word_in_dict2
  *
  * Verifies the basic functionality of the search word function for dict2
@@ -97,7 +98,7 @@ START_TEST(test_find_word_in_dict2)
      *      1 existing word but non in the dictionary
      *      1 gibberish word
      */
-    char test_vectors[4][20] = {
+    char test_vectors[5][20] = {
         "evidence",
         "exami",
         "reconnaissance",
@@ -114,6 +115,92 @@ START_TEST(test_find_word_in_dict2)
  
 }END_TEST
 
+/* test_verify_chunk_in_dict1
+ *
+ * tests for the basic functionality of the function;
+ */
+START_TEST(test_verify_in_dict1)
+{
+    /* This array contains
+     *      1 Correct plaintext chunk
+     *      1 the complete plaintext
+     *      1 invalid plaintext chunk
+     */
+    char test_vectors[3][151] = {
+        "logneseandtinnedpe",
+        "ablethanusualonastomachfullofspaghettibologneseandtinnedpearshehadalsohadtheforesighttosuggestthattheytakeafewhoursbreakfromwearingthehorcruxwhichwash",
+        "olongeze"
+    };
+
+    // check for wrong length values
+    ck_assert(verify_chunk_in_dict1(NULL, 0) == 0);
+    ck_assert(verify_chunk_in_dict1(test_vectors[0], -1) == 0);
+    ck_assert(verify_chunk_in_dict1(test_vectors[0], 151 + 1) == 0);
+
+    // This chunk of text doesn't belong here.
+    ck_assert(verify_chunk_in_dict1(test_vectors[0], 0) == 0); 
+
+    // verify test_vectors
+    ck_assert(verify_chunk_in_dict1(test_vectors[0], 40) > 0);
+    ck_assert(verify_chunk_in_dict1(test_vectors[1], 0) > 0);
+    ck_assert(verify_chunk_in_dict1(test_vectors[2], 40) == 0);
+
+}END_TEST
+
+/* test_substract_alpha_buffers
+ *
+ * tests for the basic functionality of substracting buffers 
+ */
+START_TEST(test_substract_alpha_buffers) 
+{
+    /* this array contains:
+     *      1 short string of 'a's to substract 1's
+     *      1 short string of z's to force wrapping
+     *      1 short escalating string to verify a correct tendency
+     *      1 short string with non lowercase characters
+     */
+    char test_vectors[4][11] = {
+        "aaaaaaaaaa",
+        "zzzzzzzzzz",
+        "bcdefghijk",
+        "abcdefghi;",
+    };
+    char *result;
+    int i;
+
+    ck_assert(substract_alpha_buffers(NULL, test_vectors[0]) == NULL);
+    ck_assert(substract_alpha_buffers(test_vectors[0], NULL) == NULL);
+    ck_assert(substract_alpha_buffers(NULL, NULL) == NULL);
+
+    result = substract_alpha_buffers(test_vectors[0], test_vectors[1]);
+    ck_assert(result != NULL);
+    ck_assert(strncmp(result, "aaaaaaaaaa", 10) == 0);
+    free(result);
+
+    result = substract_alpha_buffers(test_vectors[1], test_vectors[0]);
+    ck_assert(result != NULL);
+    ck_assert(strncmp(result, "yyyyyyyyyy", 10) == 0);
+    free(result);
+
+    result = substract_alpha_buffers(test_vectors[0], test_vectors[0]);
+    ck_assert(result != NULL);
+    ck_assert(strncmp(result, test_vectors[1], 10) == 0);
+    free(result);
+
+    result = substract_alpha_buffers(test_vectors[2], test_vectors[0]);
+    ck_assert(result != NULL);
+    for (i = 0; i < strlen(result) -1; i++)
+        ck_assert(result[i] < result[i+1]);
+    free(result);
+
+    result = substract_alpha_buffers(test_vectors[3], test_vectors[0]);
+    ck_assert(result == NULL);
+    result = substract_alpha_buffers(test_vectors[0], test_vectors[3]);
+    ck_assert(result == NULL);
+
+}END_TEST
+
+
 // Define the suite.
 Suite * input_break_utils_suite(void)
 {
@@ -121,12 +208,13 @@ Suite * input_break_utils_suite(void)
     Suite *s = suite_create ("buildup");
     TCase *tc_core = tcase_create ("core");
 
-
     /* add the case */
     tcase_add_test (tc_core, test_empty);
     tcase_add_test (tc_core, test_find_plaintext_in_dict1);
     tcase_add_test (tc_core, test_find_plaintext_in_dict2);
     tcase_add_test (tc_core, test_find_word_in_dict2);
+    tcase_add_test (tc_core, test_verify_in_dict1);
+    tcase_add_test (tc_core, test_substract_alpha_buffers);
     suite_add_tcase (s, tc_core);
 
     return s;
