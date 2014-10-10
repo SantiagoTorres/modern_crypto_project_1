@@ -33,6 +33,7 @@
 #define D1_LONGEST_WORD 151
 #define D1_DICTIONARY_LENGTH 151
 #define D1_ALPHABETIC_CHARACTERS 26
+#define D1_MINIMUM_PREFIX 9
 
 const int D1_ALPHA_INDEX[] = {
     0, //a

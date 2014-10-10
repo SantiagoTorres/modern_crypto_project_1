@@ -34,7 +34,66 @@ char * break_polyalpha_assuming(int keylength, char *ciphertext)
 
 }
 
+/* break_polyalpha_no_stretching_dict1
+ *
+ * This is the simplest cracking mechanism, it will attempt to crack a
+ * ciphertext that was created from dict 1 by exploiting known-plaintext
+ * attacks and the periodicity of polyalphabetic ciphers
+ *
+ *  INPUT:
+ *      int keylength: the provided length of the key
+ *      char *ciphertext: the ciphertext to decrypt
+ *
+ *  OUTPUT:
+ *      char *plaintext: A proposed plaintext or NULL if the plaintext seems 
+ *      to be unrecoverable. Proper verification should be attempted on the 
+ *      created plaintext. 
+ */
+char *break_polyalpha_no_stretching_dict1(int keylength, char *ciphertext)
+{
 
+    char *plaintext = NULL;
+    char plaintext_buffer[D1_MINIMUM_PREFIX + 1];
+    char ciphertext_buffer[D1_MINIMUM_PREFIX + 1];
+    char *key;
+    int i;
+
+    if (keylength < 0 || keylength > 40)
+        return NULL;
+
+    if (ciphertext == NULL)
+        return NULL;
+
+    ciphertext_buffer[D1_MINIMUM_PREFIX] = '\0';
+    plaintext_buffer[D1_MINIMUM_PREFIX] = '\0';
+
+    do{
+        /* by doing this, we obtain a piece of the key */
+        strncpy(ciphertext_buffer, ciphertext, D1_MINIMUM_PREFIX);
+        strncpy(plaintext_buffer, DICTIONARY1[i], D1_MINIMUM_PREFIX);
+        key = substract_alpha_buffers(ciphertext_buffer, plaintext_buffer);
+
+        /* we obtain another piece of the plaintext with our guessed key... */
+        strncpy(ciphertext_buffer, ciphertext+keylength, D1_MINIMUM_PREFIX);
+        plaintext = substract_alpha_buffers(ciphertext_buffer, key);
+
+        if (verify_chunk_in_dict1(plaintext, keylength)) {
+            free(plaintext);
+            free(key);
+            plaintext = malloc(sizeof(*ciphertext)*strlen(ciphertext) + 1);
+            strncpy(plaintext, DICTIONARY1[i], D1_LONGEST_WORD + 1);
+            break;
+            
+        } else {
+            free(key);
+            free(plaintext);
+            plaintext = NULL;
+            i++;
+        }
+    }while(i < D1_DICTIONARY_LENGTH);
+    
+    return plaintext;
+}
 
 /*
  * verify_plaintext
@@ -197,4 +256,143 @@ int find_word_in_dict2(char *plaintext)
 
     return 0;
 
+}
+
+
+/* verify_chunk_in_dict1
+ *
+ * Given a middle piece of a proposed ciphertext, verify if such piece
+ * could belong to a valid ciphertext. 
+ *  
+ *  INPUT:
+ *      char * proposed_cipher: The proposed cipher
+ *      int offest:             The offset of this chunk in the original text
+ *
+ *  OUTPUT:
+ *      int > 1: if this could belong to dictionary 1
+ *      int == 0: if this cannot belong to dictionary 1
+ */
+int verify_chunk_in_dict1(char *proposed_cipher, int offset)
+{
+
+    size_t chunk_length;
+    int i;
+
+    if (proposed_cipher == NULL)
+        return 0;
+
+    chunk_length = strlen(proposed_cipher);
+    
+    if (offset < 0)
+        return 0;
+
+    if (offset + chunk_length > D1_LONGEST_WORD)
+        return 0;
+   
+    for (i = 0; i < D1_DICTIONARY_LENGTH; i++) {
+        if (strncmp(DICTIONARY1[i]+offset, proposed_cipher, chunk_length) == 0)
+                return 1;
+
+    }
+
+    return 0;
+
+}
+
+
+/* add_alpha_buffers
+ *
+ * As substract, but adds instead
+ *  
+ *  INPUT:
+ *      char * buffer1: the buffer to add to
+ *      char * buffer2: the buffer to add
+ *
+ *  OUTPUT:
+ *      char * the resulting buffer or NULL if there was an error
+ */
+char *add_alpha_buffers(char *buffer1, char *buffer2)
+{
+    
+    char *result;
+    char rollover = 'z' - 'a' + 1;
+    char temp;
+    int i;
+
+    if (buffer1 == NULL || buffer2 == NULL)
+        return NULL;
+   
+    if (strlen(buffer1) != strlen(buffer2))
+       return NULL;
+
+    result = malloc(sizeof(*result) * (strlen(buffer1)+1));
+    if (result == NULL)
+        return NULL;
+
+    for (i = 0; i < strlen(buffer1); i++) {
+
+        if (!islower(buffer1[i]) || !islower(buffer2[i])){
+            free(result);
+            return NULL; 
+        }
+        // this is a constant that "floors" the actual offset (z becomes 26, not hundreds);
+        temp = buffer2[i] - 'a' + 1;
+        result[i] = buffer1[i] + temp;
+        if (!islower(result[i]))
+            result[i] -= rollover;
+    }    
+
+    result[i] = '\0';
+
+    return result;
+}
+
+
+
+/* substract_alpha_buffers
+ *
+ * Given two strings, create an alphabetic string by substracting one from
+ * the other. This wraps letters so only alphabetic characters result from it
+ *  
+ *  INPUT:
+ *      char * buffer1: the buffer to be substracted from
+ *      char * buffer2: the buffer to substract
+ *
+ *  OUTPUT:
+ *      char * the resulting/substracted buffer or NULL if there was an error
+ */
+char *substract_alpha_buffers(char *buffer1, char *buffer2)
+{
+    
+    char *result;
+    char rollover = 'z' - 'a' + 1;
+    char temp;
+    int i;
+
+    if (buffer1 == NULL || buffer2 == NULL)
+        return NULL;
+   
+    if (strlen(buffer1) != strlen(buffer2))
+       return NULL;
+
+    result = malloc(sizeof(*result) * (strlen(buffer1)+1));
+    if (result == NULL)
+        return NULL;
+
+    for (i = 0; i < strlen(buffer1); i++) {
+
+        if (!islower(buffer1[i]) || !islower(buffer2[i])){
+            free(result);
+            return NULL; 
+        }
+        // this is a constant that "floors" the actual offset (z becomes 26, not hundreds);
+        temp = buffer2[i] - 'a' + 1;
+        result[i] = buffer1[i] - temp;
+        if (!islower(result[i]))
+            result[i] += rollover;
+    }    
+
+    result[i] = '\0';
+
+    return result;
 }

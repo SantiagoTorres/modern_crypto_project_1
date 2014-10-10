@@ -34,6 +34,24 @@
 /* this is an empty break function stub */
 char * break_polyalpha_assuming(int keylength, char *ciphertext);
 
+
+/* break_polyalpha_no_stretching_dict1
+ *
+ * This is the simplest cracking mechanism, it will attempt to crack a
+ * ciphertext that was created from dict 1 by exploiting known-plaintext
+ * attacks and the periodicity of polyalphabetic ciphers
+ *
+ *  INPUT:
+ *      int keylength: the provided length of the key
+ *      char *ciphertext: the ciphertext to decrypt
+ *
+ *  OUTPUT:
+ *      char *plaintext: A proposed plaintext or NULL if the plaintext seems 
+ *      to be unrecoverable. Proper verification should be attempted on the 
+ *      created plaintext. 
+ */
+char *break_polyalpha_no_stretching_dict1(int keylength, char *ciphertext);
+
 /*
  * verify_plaintext
  *
@@ -91,5 +109,19 @@ int find_plaintext_in_dict2(char *plaintext);
  *      int = 0 if the provided word doesn't or the input was NULL
  */
 int find_word_in_dict2(char *plaintext);
+
+/* substract_alpha_buffers
+ *
+ * Given two strings, create an alphabetic string by substracting one from
+ * the other. This wraps letters so only alphabetic characters result from it
+ *  
+ *  INPUT:
+ *      char * buffer1: the buffer to be substracted from
+ *      char * buffer2: the buffer to substract
+ *
+ *  OUTPUT:
+ *      char * the resulting/substracted buffer or NULL if there was an error
+ */
+char *substract_alpha_buffers(char *buffer1, char *buffer2);
 
 #endif /* break_utils.h */
