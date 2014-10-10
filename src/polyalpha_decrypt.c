@@ -14,6 +14,7 @@ int main(void)
 
     char *(* break_cipher[ALGORITHM_NUMBER])(int keylength, char *ciphertext) = {
         break_polyalpha_assuming,
+        break_polyalpha_no_stretching_dict1,
     };
 
 
@@ -28,11 +29,11 @@ int main(void)
 
         plaintext = break_cipher[i](keylength, ciphertext);
         tick = time(NULL);
-
+   
         // we could verify here... this returned a valid plaintext
         if (plaintext) {
             puts("Found plaintext");
-            printf("[*] %s", plaintext);
+            printf("[*] %s\n", plaintext);
             break;
         }
 
@@ -44,11 +45,12 @@ int main(void)
         i++;
     }while(i < ALGORITHM_NUMBER);
 
+    printf("time elapsed... %d\n", tick - begin);
     if (!plaintext)
         puts("Program is done... no plaintext found");
-
-    else
-        free(plaintext);
+    //else
+    //        free(plaintext);
+    
 
     return 0;
 }
