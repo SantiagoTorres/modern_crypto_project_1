@@ -85,10 +85,11 @@ def encrypt_polyalphabetically(plaintext, key):
 
     return ciphertext
 
-def print_info(key, ciphertext, quiet=False):
+def print_info(key, ciphertext, plaintext, quiet=False):
     
     if not quiet:
         print("Key is {}".format(key))
+        print("Plaintext is {}".format(plaintext))
     print("Ciphertext: {}".format(ciphertext))
 
 
@@ -116,5 +117,5 @@ if __name__=='__main__':
     key = generate_polyalphabetic_key(keylength)
 
     ciphertext = encrypt_polyalphabetically(plaintext, key)
-    print_info(key, ciphertext, quiet)
+    print_info(key, ciphertext, plaintext, quiet)
 
