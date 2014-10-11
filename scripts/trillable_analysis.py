@@ -8,6 +8,7 @@
     A list of possible trillables is print to the screen to analyse
 """
 import string
+import sys
 
 def get_beginning_letters(wordlist):
     start = []
@@ -15,7 +16,7 @@ def get_beginning_letters(wordlist):
 
     for word in wordlist:
         start.append(word[0:2])
-        end.append(word[-2:0])
+        end.append(word[-2:])
 
     return start, end
 
@@ -31,8 +32,8 @@ def get_trillables_in_middle(wordlist):
 
 def produce_trillables_from_word_boundaries(start, end):
     trillables = set()
-    for letter in start:
-        for otherletter in end:
+    for letter in end:
+        for otherletter in start:
             trillables.add((letter+otherletter)[0:3])
             trillables.add((letter+otherletter)[1:4])
 
@@ -67,4 +68,56 @@ if __name__=='__main__':
     print("{}%({}%) of total trillables".format(
         len(trillables)/float(len(all_trillables)),
         len(boundary_trillables)/float(len(all_trillables))))
+
+    trillables_sorted = [x for x in trillables]
+    trillables_sorted.sort()
+
+    current_letter = trillables_sorted[0][0]
+    offsets = {}
+    i = 0
+    offsets['a'] = 0
+    with open("include/trillables.h", "wt") as fp:
+        fp.write("const char[{}][4] TRILLABLES = {{\n".format(len(trillables)))
+        for trillable in trillables_sorted:
+            trillable_letter = trillable[0]
+            
+            if trillable_letter != current_letter:
+                fp.write("\n\t")
+                current_letter = trillable_letter
+                offsets[current_letter] = i
+
+            fp.write('"{}", '.format(trillable))
+            i += 1
+
+        fp.write("\n\t};")
+
+        fp.write("\n\n")
+        fp.write("const int[{}] TRILLABLE_OFFSETS = {{\n".format(
+            len(string.ascii_lowercase)))
+
+        for offset in string.ascii_lowercase:
+            if offset in offsets:
+                fp.write("\t{}, // {}\n".format(offsets[offset], offset))
+            else:
+                fp.write("\t{}, // {}\n".format(-1, offset))
+
+        fp.write("\t};")
+
+        fp.write("\n\n")
+        fp.write("const int[{}] TRILLABLE_OFFSETS_END = {{\n".format(
+            len(string.ascii_lowercase)))
+    
+        carry = 0
+        for offset in string.ascii_lowercase[1:]:
+            for i in range(0,carry):
+                carry -= 1
+                fp.write("\t-1,\n")
+
+            if offset in offsets:
+                fp.write("\t{},\n".format(offsets[offset]-1))
+            else:
+                carry += 1
+
+        fp.write("\t{},\n".format(len(trillables)-1))
+        fp.write("\t};\n")
 
