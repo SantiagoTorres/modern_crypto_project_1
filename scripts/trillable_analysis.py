@@ -24,8 +24,10 @@ def get_trillables_in_middle(wordlist):
     trillables = set()
 
     for word in wordlist:
-        for i in range(0, len(word)-3):
+        for i in range(0, len(word)-2):
             billable = word[i:i+3]
+            if word == "party":
+                import pdb; pdb.set_trace()
             trillables.add(billable)
 
     return trillables
@@ -76,7 +78,7 @@ if __name__=='__main__':
     offsets = {}
     i = 0
     offsets['a'] = 0
-    with open("include/trillables.h", "wt") as fp:
+    with open("trillables.h", "wt") as fp:
         fp.write("const char[{}][4] TRILLABLES = {{\n".format(len(trillables)))
         for trillable in trillables_sorted:
             trillable_letter = trillable[0]
