@@ -28,7 +28,7 @@
 #define TRILLABLES_H
 
 
-const char[3401][4] TRILLABLES = {
+const char TRILLABLES[3401][4] = {
     "aab", "aac", "aad", "aae", "aal", "aam", "aan", "aap", "aat", "abd",
     "abe", "abl", "abo", "abr", "abu", "aca", "acc", "ace", "ach", "aci",
     "ack", "acl", "aco", "acr", "acu", "ada", "adb", "adc", "add", "ade",
@@ -384,7 +384,7 @@ const char[3401][4] TRILLABLES = {
     "zen", 
 	};
 
-const int[26] TRILLABLE_OFFSETS = {
+const int TRILLABLE_OFFSETS[26] = {
 	0, // a
 	194, // b
 	211, // c
@@ -413,7 +413,7 @@ const int[26] TRILLABLE_OFFSETS = {
 	3400, // z
 	};
 
-const int[26] TRILLABLE_OFFSETS_END = {
+const int TRILLABLE_OFFSETS_END[26]= {
 	193,
 	210,
 	419,
@@ -422,8 +422,8 @@ const int[26] TRILLABLE_OFFSETS_END = {
 	902,
 	1039,
 	1196,
-	-1, // j
 	1368,
+	-1, // j
 	1481,
 	1666,
 	1784,
