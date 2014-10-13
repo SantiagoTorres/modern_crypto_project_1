@@ -1,4 +1,34 @@
-const char[3440][4] TRILLABLES = {
+/*
+ * This file is Copyright Santiago Torres Arias <torresariass@gmail.com> 2014 
+ *
+ * Permission is hereby granted, free of charge, to any person
+ * obtaining a copy of this software and associated documentation
+ * files (the "Software"), to deal in the Software without
+ * restriction, including without limitation the rights to use, copy,
+ *
+ * modify, merge, publish, distribute, sublicense, and/or sell copies
+ * of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be
+ * included in all copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+ * EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+ * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+ * NONINFRINGEMENT.  IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
+ * HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
+ * WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
+ * DEALINGS IN THE SOFTWARE.
+ *
+ */
+
+#ifndef TRILLABLES_H
+#define TRILLABLES_H
+
+
+const char TRILLABLES[3440][4] = {
     "aab", "aac", "aad", "aae", "aal", "aam", "aan", "aap", "aat", "abd",
     "abe", "abl", "abo", "abr", "abu", "aca", "acc", "ace", "ach", "aci",
     "ack", "acl", "aco", "acr", "acu", "acy", "ada", "adb", "adc", "add",
@@ -356,7 +386,7 @@ const char[3440][4] TRILLABLES = {
     "zen", 
 	};
 
-const int[26] TRILLABLE_OFFSETS = {
+const int TRILLABLE_OFFSETS[26] = {
 	0, // a
 	199, // b
 	218, // c
@@ -385,7 +415,7 @@ const int[26] TRILLABLE_OFFSETS = {
 	3439, // z
 	};
 
-const int[26] TRILLABLE_OFFSETS_END = {
+const int TRILLABLE_OFFSETS_END[26] = {
 	198,
 	217,
 	428,
@@ -411,5 +441,10 @@ const int[26] TRILLABLE_OFFSETS_END = {
 	3244,
 	3340,
 	3438,
-	3439,
+	3440,
 	};
+
+
+#endif
+
+
