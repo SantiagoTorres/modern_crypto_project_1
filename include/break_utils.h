@@ -52,6 +52,37 @@ char * break_polyalpha_assuming(int keylength, char *ciphertext);
  */
 char *break_polyalpha_no_stretching_dict1(int keylength, char *ciphertext);
 
+
+/* break_polyalpha_nostretching_dict2_wrapper
+ *
+ * a thin wrapper that intializes the function with 0 values
+ */
+char *break_polyalpha_nostretching_dict2_wrapper(int keylength, 
+        char *ciphertext);
+
+
+/* break_polyalpha_nostretching_dict2
+ *
+ * attempts to break a polyalphabetic cipher in which the key
+ * is periodic in t and attempts doing so by using the known-
+ * plaintext of dictionary2
+ *
+ *  INPUT:
+ *      char *ciphertext: the cipher to break
+ *      int keylength: t, aka. the length of the key.
+ *      int offset: which is the current chunk of ciphertext we are attempting 
+ *                  to break
+ *      char *plaintext: a buffer in which we will store the resulting plaintext
+ *
+ *  OUTPUT:
+ *      int = 0 if the current chunk couldn't be broken the result buffer will
+ *              remain untouched
+ *      int > 0 if the current chunk was decrypted, the result buffer is full
+ */
+int break_polyalpha_nostretching_dict2(char *ciphertext, int keylength, 
+        int offset, char *plaintext);
+
+
 /*
  * verify_plaintext
  *

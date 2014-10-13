@@ -15,6 +15,7 @@ int main(void)
     char *(* break_cipher[ALGORITHM_NUMBER])(int keylength, char *ciphertext) = {
         break_polyalpha_assuming,
         break_polyalpha_no_stretching_dict1,
+        break_polyalpha_nostretching_dict2_wrapper,
     };
 
 
@@ -38,7 +39,6 @@ int main(void)
         }
 
         /* If we are running out of time */    
-        printf("%d\n", (int)(tick - begin));
         if ((tick - begin) > 110)
             break;
 
@@ -48,8 +48,8 @@ int main(void)
     printf("time elapsed... %d\n", tick - begin);
     if (!plaintext)
         puts("Program is done... no plaintext found");
-    //else
-    //        free(plaintext);
+    else
+        free(plaintext);
     
 
     return 0;

@@ -34,7 +34,7 @@
 
 
 /* DEFINES */
-#define ALGORITHM_NUMBER 2
+#define ALGORITHM_NUMBER 3
 
 #endif /* POLYALPHA_DECRYPT_H */
 

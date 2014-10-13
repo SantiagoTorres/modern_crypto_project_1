@@ -96,8 +96,104 @@ char *break_polyalpha_no_stretching_dict1(int keylength, char *ciphertext)
     return plaintext;
 }
 
-/*
- * verify_plaintext
+
+/* break_polyalpha_nostretching_dict2_wrapper
+ *
+ * a thin wrapper that intializes the function with 0 values
+ */
+char *break_polyalpha_nostretching_dict2_wrapper(int keylength, 
+        char *ciphertext)
+{
+    
+    int offset = 0;
+    int result;
+    char *plaintext;
+
+    if (ciphertext == NULL)
+        return NULL;
+
+    plaintext = malloc(sizeof(*plaintext) * (strlen(ciphertext) + 1));
+
+    result = break_polyalpha_nostretching_dict2(ciphertext, keylength, offset,
+           plaintext); 
+
+    if (result == 0) {
+        free(plaintext);
+        return NULL;
+    } else
+        return plaintext;
+
+}
+
+/* break_polyalpha_nostretching_dict2
+ *
+ * attempts to break a polyalphabetic cipher in which the key
+ * is periodic in t and attempts doing so by using the known-
+ * plaintext of dictionary2
+ *
+ *  INPUT:
+ *      char *ciphertext: the cipher to break
+ *      int keylength: t, aka. the length of the key.
+ *      int offset: which is the current chunk of ciphertext we are attempting 
+ *                  to break
+ *      char *plaintext: a buffer in which we will store the resulting plaintext
+ *
+ *  OUTPUT:
+ *      int = 0 if the current chunk couldn't be broken the result buffer will
+ *              remain untouched
+ *      int > 0 if the current chunk was decrypted, the result buffer is full
+ */
+int break_polyalpha_nostretching_dict2(char *ciphertext, int keylength, 
+        int offset, char *plaintext)
+{
+
+    int i;
+    char word_buffer[D2_LONGEST_WORD+1];
+    char *shift_buffer, *trillable_pt;
+    char verification_buffer[201];
+    size_t wordlen;
+
+    if (offset >= keylength)
+        return 1;
+
+    for (i = 0; i < D2_DICTIONARY_LENGTH; i++) {
+
+        /* attempt to get a portion of the key from the cipher */
+        wordlen = strlen(DICTIONARY2[i]);
+        strncpy(word_buffer, ciphertext + offset, wordlen);
+        word_buffer[wordlen] = '\0';
+        shift_buffer = substract_alpha_buffers(word_buffer, DICTIONARY2[i]);
+
+        /* now try to decrypt with these shifts */
+        strncpy(word_buffer, ciphertext + offset + keylength, wordlen);
+        trillable_pt = substract_alpha_buffers(word_buffer, shift_buffer);
+
+        if (verify_trillable_chunk(trillable_pt) == 0) {
+
+            free(trillable_pt);
+            free(shift_buffer);
+            continue; 
+
+        } else if(break_polyalpha_nostretching_dict2(ciphertext, keylength,
+                        offset + wordlen, plaintext) > 0) {
+           
+              
+            strncpy(plaintext + offset, DICTIONARY2[i], wordlen);
+            strncpy(plaintext + offset + keylength, trillable_pt, wordlen);
+            free(shift_buffer);
+            free(trillable_pt);
+            strncpy(verification_buffer, plaintext + keylength + offset, 201);
+
+            if (verify_trillable_chunk(verification_buffer) > 0)
+                return 1;
+
+        }
+    }
+    return 0;
+}
+
+
+/* verify_plaintext
  *
  * Checks if the input plaintext exists in dictionary1 or if it could be 
  * derived from the words contained in dictionary 2
@@ -475,3 +571,6 @@ int verify_trillable_chunk(char *chunk)
     }
     return 1;
 }
+
+
+
