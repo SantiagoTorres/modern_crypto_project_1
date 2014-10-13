@@ -124,4 +124,20 @@ int find_word_in_dict2(char *plaintext);
  */
 char *substract_alpha_buffers(char *buffer1, char *buffer2);
 
+
+/* is_valid_trillable
+ *
+ * Given a trillable, verify its existence inside the 
+ * trilalble dictionary
+ *
+ *  INPUT:
+ *      char *trillable
+ *
+ *  OUTPUT:
+ *      int > 0 if the trillable is in the dictionary
+ *      int = 0 if the trillable isn't
+ */
+int is_valid_trillable(char *trillable);
+
+
 #endif /* break_utils.h */

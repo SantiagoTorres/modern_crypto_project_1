@@ -26,6 +26,7 @@
 #include "break_utils.h"
 #include "dictionary1.h"
 #include "dictionary2.h"
+#include "trillables.h"
 
 char * break_polyalpha_assuming(int keylength, char *ciphertext)
 {
@@ -395,4 +396,44 @@ char *substract_alpha_buffers(char *buffer1, char *buffer2)
     result[i] = '\0';
 
     return result;
+}
+
+
+/* is_valid_trillable
+ *
+ * Given a trillable, verify its existence inside the 
+ * trilalble dictionary
+ *
+ *  INPUT:
+ *      char *trillable
+ *
+ *  OUTPUT:
+ *      int > 0 if the trillable is in the dictionary
+ *      int = 0 if the trillable isn't
+ */
+int is_valid_trillable(char *trillable)
+{
+
+    int i;
+    int offset;
+
+    if (trillable == NULL)
+        return 0;
+
+    if (strlen(trillable) != 3)
+        return 0;
+
+    offset = trillable[0] - 'a';
+
+    /* the offset table reports that there are no trillables
+     * with this letter (this is for the j value actually
+     */
+    if (TRILLABLE_OFFSETS[offset] == -1)
+        return 0;
+
+    for (i = TRILLABLE_OFFSETS[offset]; i <= TRILLABLE_OFFSETS_END[offset]; i++)
+        if (trillable[1] == TRILLABLES[i][1] && trillable[2] == TRILLABLES[i][2])
+           return 1;
+
+    return 0;
 }

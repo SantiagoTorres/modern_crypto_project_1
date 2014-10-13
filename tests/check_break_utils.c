@@ -200,6 +200,50 @@ START_TEST(test_substract_alpha_buffers)
 
 }END_TEST
 
+/* test_is_valid_trillable
+ *
+ * tests the trillable search function basic usage, no regrestion
+ * tests are made here.
+ */
+START_TEST(test_is_valid_trillable)
+{
+
+    int i;
+
+    /* this array contains five valid trillables */
+    char valid_vectors[5][4] = {
+        "zen",
+        "aze",
+        "bdo",
+        "iaa",
+        "omg",
+    };
+
+    /* This other array contains invalid trillables and wrong-length
+     * strings
+     */
+    char invalid_vectors[5][10] = {
+        "abcdefg",
+        "aaa",
+        "aa",
+        "",
+        "zeb",
+    };
+
+
+    /* We'll check for nullpointer first */
+    ck_assert(is_valid_trillable(NULL) == 0);
+
+    /* check invalid vectors */
+    for (i = 0; i < 5; i++)
+       ck_assert(is_valid_trillable(invalid_vectors[i]) == 0);
+
+
+    /* check valid vectors */
+    for (i = 0; i < 5; i++)
+        ck_assert(is_valid_trillable(valid_vectors[i]) > 0);
+
+}END_TEST
 
 // Define the suite.
 Suite * input_break_utils_suite(void)
@@ -215,6 +259,7 @@ Suite * input_break_utils_suite(void)
     tcase_add_test (tc_core, test_find_word_in_dict2);
     tcase_add_test (tc_core, test_verify_in_dict1);
     tcase_add_test (tc_core, test_substract_alpha_buffers);
+    tcase_add_test (tc_core, test_is_valid_trillable);
     suite_add_tcase (s, tc_core);
 
     return s;
