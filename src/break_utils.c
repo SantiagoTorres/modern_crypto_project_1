@@ -437,3 +437,41 @@ int is_valid_trillable(char *trillable)
 
     return 0;
 }
+
+/* verify_trillable_chunk 
+ *
+ * given a piece of plaintext, verify that all of the
+ * trillables in it belong to the dictionary
+ *
+ *  INPUT:
+ *      char *chunk
+ *
+ *  OUTPUT
+ *      int > 0 is the chunk only contains valid trillables
+ *      int = 0 if one or more trillables don't belong
+ */
+int verify_trillable_chunk(char *chunk) 
+{
+
+    size_t length;
+    char trillable[4];
+    int i;
+
+    if (chunk == NULL)
+        return 0;
+
+    length = strlen(chunk);
+
+    if (length < 3)
+        return 0;
+    // we traverse to length -2 because trillables are length 3...
+    trillable[3] = '\0';
+    for (i = 0; i < length -2; i++){
+        trillable[0] = chunk[i];
+        trillable[1] = chunk[i+1];
+        trillable[2] = chunk[i+2];
+        if(is_valid_trillable(trillable) == 0)
+            return 0;
+    }
+    return 1;
+}

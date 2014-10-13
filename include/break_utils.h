@@ -140,4 +140,19 @@ char *substract_alpha_buffers(char *buffer1, char *buffer2);
 int is_valid_trillable(char *trillable);
 
 
+/* verify_trillable_chunk 
+ *
+ * given a piece of plaintext, verify that all of the
+ * trillables in it belong to the dictionary
+ *
+ *  INPUT:
+ *      char *chunk
+ *
+ *  OUTPUT
+ *      int > 0 is the chunk only contains valid trillables
+ *      int = 0 if one or more trillables don't belong
+ */
+int verify_trillable_chunk(char *chunk);
+
+
 #endif /* break_utils.h */
