@@ -108,20 +108,53 @@ char *break_polyalpha_nostretching_dict2_wrapper(int keylength,
     int offset = 0;
     int result;
     char *plaintext;
+    char *plaintext_buffer, *shift_buffer, *ciphertext_buffer;
+    int i;
+    char actual_offset;
 
     if (ciphertext == NULL)
         return NULL;
 
     plaintext = malloc(sizeof(*plaintext) * (strlen(ciphertext) + 1));
+    plaintext_buffer = malloc(sizeof(*plaintext_buffer) * (keylength + 1));
+    ciphertext_buffer = malloc(sizeof(*ciphertext_buffer) * (keylength + 1));
+
 
     result = break_polyalpha_nostretching_dict2(ciphertext, keylength, offset,
            plaintext); 
 
     if (result == 0) {
         free(plaintext);
+        free(ciphertext_buffer);
+        free(plaintext_buffer);
         return NULL;
-    } else
+    } else{
+
+        /* we obtain our shift key and propagate it to the rest of the ciphertext */
+        strncpy(plaintext_buffer, plaintext, keylength);
+        strncpy(ciphertext_buffer, ciphertext, keylength);
+        plaintext_buffer[keylength] = '\0';
+        ciphertext_buffer[keylength] = '\0';
+        shift_buffer = substract_alpha_buffers(ciphertext_buffer, plaintext_buffer);
+
+        /* we apply the shift key here to the rest of the ciphertext */ 
+        for (i = 2 * keylength; i < strlen(ciphertext); i++) {
+            actual_offset = shift_buffer[i%keylength] - 'a' + 1; 
+            plaintext[i] = ciphertext[i] - actual_offset;
+            if (plaintext[i] < 'a')
+               plaintext[i] += ('z' - 'a' + 1); 
+
+        }
+
+        /* wrap up, we are done... */
+        free(shift_buffer);
+        free(plaintext_buffer);
+        free(ciphertext_buffer);
+        plaintext[i] = '\0';
+
         return plaintext;
+
+    }
 
 }
 
@@ -152,6 +185,7 @@ int break_polyalpha_nostretching_dict2(char *ciphertext, int keylength,
     char *shift_buffer, *trillable_pt;
     char verification_buffer[201];
     size_t wordlen;
+    int result;
 
     if (offset >= keylength)
         return 1;
@@ -174,17 +208,27 @@ int break_polyalpha_nostretching_dict2(char *ciphertext, int keylength,
             free(shift_buffer);
             continue; 
 
-        } else if(break_polyalpha_nostretching_dict2(ciphertext, keylength,
-                        offset + wordlen, plaintext) > 0) {
+        } else {
+            
            
-              
+            /* bugfix, spurious information might leak from down-the chain attempts */
+            if (offset + wordlen > keylength)
+                wordlen = keylength - offset + 1;
+
             strncpy(plaintext + offset, DICTIONARY2[i], wordlen);
             strncpy(plaintext + offset + keylength, trillable_pt, wordlen);
             free(shift_buffer);
             free(trillable_pt);
-            strncpy(verification_buffer, plaintext + keylength + offset, 201);
 
-            if (verify_trillable_chunk(verification_buffer) > 0)
+            result = break_polyalpha_nostretching_dict2(ciphertext, keylength,
+                                                   offset + wordlen, plaintext);
+
+            /* Bugfix, spurious data was being held and compared as part of the
+             * new plaintext */
+            plaintext[2 * keylength] = '\0';
+
+            strncpy(verification_buffer, plaintext + keylength, 201);
+            if (verify_trillable_chunk(verification_buffer) > 0 && result == 1)
                 return 1;
 
         }
@@ -560,14 +604,17 @@ int verify_trillable_chunk(char *chunk)
 
     if (length < 3)
         return 0;
+
     // we traverse to length -2 because trillables are length 3...
     trillable[3] = '\0';
     for (i = 0; i < length -2; i++){
         trillable[0] = chunk[i];
         trillable[1] = chunk[i+1];
         trillable[2] = chunk[i+2];
-        if(is_valid_trillable(trillable) == 0)
+        if(is_valid_trillable(trillable) == 0){
             return 0;
+            printf("Wrong trilalble: %s\n", trillable);
+        }
     }
     return 1;
 }
