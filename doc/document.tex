@@ -50,7 +50,7 @@ following equation provides a simplified version of the possible variants that
 $j(i)$ can have:
 
 \begin{equation}
-    j(i) = \left( \frac{xi^y}{zj^k} + m \right) \mod{t}
+    j(i) = \left( \frac{xi^y}{z} + m \right) \mod{t}
 \end{equation}
 
 In this equation, we adopt the following nomenclature:
@@ -58,7 +58,7 @@ In this equation, we adopt the following nomenclature:
     \item i is the index
     \item x is a define a ``decimating coefficient'' for i.
     \item y defines a ``decimating exponential'' factor for the index. (we assume y = 1)
-    \item function $zj^k$ defines a ``stretching factor''
+    \item The constant term $z$ defines a ``stretching factor''
     \item m is a ``start offset'', and it can be described as shifting the key by m bins.
     \item $\mod{t}$ guarantees that the values selected are inside the generated key and t is the length of the key.
     \item we assume $\frac{x}{z}$ is a multiple of t, this makes it periodic on t.
@@ -117,7 +117,16 @@ set of keys ${a...z}^t$ under a specific $j(i)$ is only a different permutation
 of another set of keys under a different $j(i)$. Knowing this, we can
 assume that, when a function is regular periodic, obtaining a proposed key for
 $j(i) = i \mod(t)$ is a safe bet. We will use this assumption in our breaking 
-mechanisms, as it simplifies our analysis greatly.
+mechanisms, as it simplifies our analysis greatly. Refer to figure~\ref{key-sets} 
+for a graphic description of this.
+
+\begin{figure}[ht!]
+    \centering
+    \includegraphics[width=.8\textwidth]{key-mapping}
+    \caption{Different sets are mapped using different functions $j(i)$ but,
+    if $j(i)$ and $j'(i)$ share periods, both sets will share a large amount of keys.}
+    \label{key-sets}
+\end{figure}
 
 \subsection{Frequency analysis on polyalphabetic ciphers}
 
@@ -179,7 +188,12 @@ alphabetized potential plaintext dictionary.
 The code we wrote for this takes less than a second to verify and dismiss all
 possible candidates for the plaintext. 
 
-
+\begin{figure}[ht!]
+    \centering
+    \includegraphics[width=.8\textwidth]{breaking-dict1}
+    \caption{The breaking procedure from ciphertexts produced from Dictionary 1}
+    \label{breaking-dict1}
+\end{figure}
 
 \section{Breaking dictionary 2}
 
@@ -231,6 +245,15 @@ our overall decryption as fast as possible.
 We perform the same attack as in dictionary 1, however our oracle has changed. 
 We now use the 3-character tuples (trillables) approach as defined in section D.2.2 
  
+\begin{figure}[ht!]
+    \centering
+    \includegraphics[width=.8\textwidth]{breaking-dict2}
+    \caption{The breaking procedure from ciphertexts produced from Dictionary 2. Note
+    how it's possible that the second decrypted subsection is part of a word, or even two or more
+words}
+    \label{breaking-dict1}
+\end{figure}
+
 
 \section{Results}
 We made a script that randomly selects a $j(i)$ with our constraints listed above and 
@@ -261,4 +284,5 @@ given beforehand (known plaintext attack).
 Both partners Santiago and Luke were involved in the following tasks: 
 Outlining and Testing  Attack Strategies, Software Engineering and Coding, Analysis of Results, 
 Write-Up and Final Analysis.
+
 \end{document}
