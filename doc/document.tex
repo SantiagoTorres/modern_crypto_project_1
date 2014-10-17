@@ -28,12 +28,10 @@
 \newpage
 
 \section{Introduction}
-
 Polyalphabetic ciphers have been around in humanity for hundreds of years now.
 And, although their use is no longer recommended for real cryptography, its use
 is still widespread among cryptography amateurs and cryptography
-challenges\footnote{A really popular cipher challenge includes two
-polyalphabetic ciphers http://simonsingh.net/cryptography/cipher-challenge/}.
+challenges.
 
 It is known that polyalphabetic ciphers are still subject to frequency
 analysis, and known plaintext attacks. The focus of this writeup is to
@@ -59,25 +57,24 @@ In this equation, we adopt the following nomenclature:
 \begin{itemize}
     \item i is the index
     \item x is a define a ``decimating coefficient'' for i.
-    \item y defines a ``decimating exponential'' factor for the index.
+    \item y defines a ``decimating exponential'' factor for the index. (we assume y = 1)
     \item function $zj^k$ defines a ``stretching factor''
     \item m is a ``start offset'', and it can be described as shifting the key by m bins.
     \item $\mod{t}$ guarantees that the values selected are inside the generated key and t is the length of the key.
+    \item we assume $\frac{x}{z}$ is a multiple of t, this makes it periodic on t.
 \end{itemize}
 
 The relationship between the upper and lower factors define how this function behaves. 
 In general, we can consider to be three variants: periodic, decimating and stretching. 
-We will define these concepts next.
 
 \subsection{Key stretching and key-decimating}
 
 When the factor above ($xi^y$) is polinomially bigger than the factor below
-($zj^k$), then we can assume that we have a key-decimating function. Key
+($z$), then we can assume that we have a key-decimating function. Key
 decimating functions make the key essentially "smaller" in a sense that some
-values are skipped and hence lost (depending on the periodicity, we will
-explain this later).
+values are skipped and hence lost (depending on the periodicity).
 
-In the other hand, when values from the upper monomial are smaller than the
+On the other hand, when values from the upper monomial are smaller than the
 lower one, we have what's called a key-stretching function. When this happens,
 we see that -- due to integer math -- some values are repeated contiguously.
 For example, imagine that we have the following $j(i)$:
@@ -90,8 +87,13 @@ In this case, the resulting function can be considered stretching because
 values for i below 4 will all point to 0, which is the first element of the
 key.
 
+For key-stretching functions, we will be unable to decrypt the ciphertext. 
+
+For key-decimating functions, we will be able to decrypt the ciphertext 
+ if $\frac{x}{z}$ is a factor of t and therefore periodic on t. 
+
 The nature of this equation has a direct effect on what we will call the key's
-periodicity. We will explain this in the next subsection.
+periodicity.
 
 \subsection{Periodicity}
 
@@ -99,12 +101,14 @@ Periodicity of the key (and $j(i)$) can be understood as ``the number of values 
 before the key-selecting sequence repeats''. Understanding this can allow us for 
 an easy definition of a break function. 
 
-Regular periodic functions can be defined as those functions in which the lower
-factor is a multiple of t. When this happens, the periodicity of $j(i)$ also falls
+We will define 'regular periodic functions' as those functions in which $\frac{x}{z}$
+is a multiple of t. When this happens, the periodicity of $j(i)$ also falls
 in a multiple of t. For our breaking scheme, we considered the function $j(i)$ to  
-be a regular periodic function since it was the easiest to analyze. However, in 
-Appendix B, we describe methods that could have been used to tackle the non-regular
-periodic family of functions.
+be a regular periodic function since it was the easiest to analyze. 
+
+However, we could break Non-regular periodic functions by finding the same subset of the key in different places 
+along the ciphertext. This is a regular step in breaking polyalphabetic cihpers if you are 
+not given the key length. Since we were given the key length we did not take this approach.   
 
 \subsection{Why periodicity matters and $j(i)$ not as much}
 
@@ -115,12 +119,28 @@ assume that, when a function is regular periodic, obtaining a proposed key for
 $j(i) = i \mod(t)$ is a safe bet. We will use this assumption in our breaking 
 mechanisms, as it simplifies our analysis greatly.
 
+\subsection{Frequency analysis on polyalphabetic ciphers}
+
+In most cases frequency analysis breaks polyalphabetic cihpers. However,
+for this project the cihper text we are able to sample is too small to 
+perform frequency analysis on. 
+
+
+
+Kasiski Examination is another technique that would work and is similar to 
+a frequency analysis but also requires us to be able to sample a greater amount 
+of ciphertext.
+
+
 \section{Breaking dictionary 1}
 
-In order to design the best-fastest mechanism to break the defined cipher, we 
+In order to design the most efficient mechanism to break the defined cipher, we 
 first need to understand the nature of the existing dictionaries. In this case
 we know that the existing plaintexts falls in a range of 150 different plaintexts
 so we decided to analyse them as words.
+
+This is known as a 'known plaintext attack'. The dictionaries given were a small 
+enough set to be analyzed using the methods outlined in this section. 
 
 \subsection{Minimum prefix: plaintexts as words}
 
@@ -130,11 +150,9 @@ messages from dictionary one are a single, long word encrypted and sent through 
 
 To understand this, we build a python script called "minimum\_prefix.py", that analyses the 
 words in a dictionary to identify the minimum amount of characters needed to differentiate
-ciphertext from each other. The result of this script threw a value of 9, and we used it
-as part of our dictionary-header definition; this script can be found in the sources
-and is also described in Appendix A.
+plaintext from each other. The result of this script output a value of 9, and we used it
+as part of our dictionary-header definition; this script can be found in the sources.
 
-\subsection{Defining our oracle}
 
 We can obtain a possible key by substracting a piece of plaintext from the ciphertext:
 
@@ -144,7 +162,7 @@ We can obtain a possible key by substracting a piece of plaintext from the ciphe
 
 Now, how do we know our key is correct?
 
-\subsection{Breaking dictionary 1: our attack}
+\subsection{Defining our Oracle and Attack}
 
 Breaking dictionary 1 is easy: we only need to apply the prefix plaintext to
 the provided ciphertext and compare the resulting  key to another portion of
@@ -153,7 +171,11 @@ the same range of the key. Since we assumed $j(i)$ to be regular periodic, then
 we can assume that it is a place where period starts and verify if the result
 matches correct plaintext of the same dictionary entry in that location. 
 
-%should we talk about the speedups? this is getting complex enough by itself...
+We used a few 'speed-ups' in our code, for example declaring the entire
+dictionary as a constant in C, alphabetizing the the dictionary, and 
+using a 'trampolining' function to jump the the first letter of the
+alphabetized potential plaintext dictionary.  
+
 The code we wrote for this takes less than a second to verify and dismiss all
 possible candidates for the plaintext. 
 
