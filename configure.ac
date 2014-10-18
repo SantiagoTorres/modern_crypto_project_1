@@ -2,7 +2,7 @@
 
 # Prelude.
 AC_PREREQ([2.59])
-AC_INIT([polyalpha_decrypt], [0.0], [torresariass@gmail.com, lmladek771@gmail.com])
+AC_INIT([polyalpha_decrypt], [1.0], [torresariass@gmail.com, lmladek771@gmail.com])
 
 
 # place to put some extra build scripts installed

@@ -19,7 +19,7 @@ int main(void)
     };
 
 
-    puts("Polyalpha decrypt 0.0");
+    puts("Polyalpha decrypt 1.0");
     prompt_keylength(&keylength);
     prompt_ciphertext(ciphertext);
 
